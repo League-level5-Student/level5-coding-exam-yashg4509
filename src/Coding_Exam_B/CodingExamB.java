@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 public class CodingExamB {
 	/*
@@ -14,7 +17,8 @@ public class CodingExamB {
 	 * the final file output will look like.
 	 */
 	
-	
+	static ArrayList<String> lines = new ArrayList<>();
+
 	public static String getLoggingInfo(String fileName) {
 		/*
 		 * 1. Complete the getLoggingInfoMethod.
@@ -25,7 +29,32 @@ public class CodingExamB {
 		 *    the line number for where each TODO was found. 
 		*/
 		
-		return "";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			Stream<String> lineStream = br.lines();
+			
+			lineStream.forEach(line -> {
+//				while(line != null) {
+					if (line.contains("TODO")) {
+						lines.add("File: " + fileName + "\n" + line + "\n");
+					}		
+//				}
+			});
+		
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String result = lines.toString();
+		
+//		System.out.println(result);
+		
+		return result;
 	}
 	
 	public static void main(String[] args) {
@@ -33,6 +62,18 @@ public class CodingExamB {
 		finalLogString += getLoggingInfo("src/Coding_Exam_B/classes/RayTracedImageViewer.java");
 		finalLogString += getLoggingInfo("src/Coding_Exam_B/classes/RayTracer.java");
 		finalLogString += getLoggingInfo("src/Coding_Exam_B/classes/Vector3.java");
+		
+		System.out.println(finalLogString);
+		
+		try {
+			FileWriter fw = new FileWriter("src/Coding_Exam_B/TODO_Log.txt", true);
+			for (int i = 0; i < lines.size(); i++) {
+				fw.write(lines.get(i));
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		 * 2. Write the finalLogString to a file called TODO_Log.txt. The file should match TODO_Log_example.txt. 
